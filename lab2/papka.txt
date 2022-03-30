@@ -1,0 +1,4 @@
+file.bat
+lab2.txt
+Lab_2.vbs
+rar.bat
