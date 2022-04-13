@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="lab6.css">
+</head>
+<body>
+    <script type="text/javascript">
+        "use strict";
+
+        let quantum = parseInt(prompt("Enter a time quantum: "));
+        let priority = [], duration = [];
+        let N = prompt("Enter the number of processes: ");
+        let i, j, burntime = 0, min, k =quantum,c = 0, difference;
+        for ( i = 0; i < N; i++) {
+            priority.push(prompt("Enter priority of process: "));
+            duration.push(prompt("Enter duration of process: "));
+        }
+        for ( i = 0; i < duration.length; i++) {
+            burntime += parseInt(duration[i]);
+        }
+     
+        function ShowProcessTable() {
+        let table = document.createElement('table');
+            for ( i = 0; i < N; i++) {
+                let tr = document.createElement('tr');
+                for ( j = 0; j < 3; j++) {
+                    let td = document.createElement('td');
+                    switch(j) {
+                        case 0:td.innerHTML = 'P' + i;break;
+                        case 1:td.innerHTML = priority[i];break;
+                        case 2:td.innerHTML = duration[i] ;break;
+                    }
+                    tr.appendChild(td);                 
+                }
+                table.appendChild(tr);
+            }
+            document.getElementById("tableDiv").appendChild(table);
+            document.getElementById("quantum").innerHTML = 'Quantum Time:' + quantum;
+        }
+        function FindMin() {
+            min = priority[0];
+            for ( i = 0; i < priority.length; i++) {
+                if (priority[i+1] < priority[i]) {min = priority[i+1];}
+            }
+
+            return priority.indexOf(min);
+
+        }
+        c= FindMin();
+        function Show() {
+            let div = document.getElementById("Div");
+            div.innerHTML += '<br>';
+            for ( i = 0; i < burntime; ) {
+                if (c==N) {c=0;div.innerHTML += '  |';}
+                if (duration[c] >= quantum ) {
+                    for (j = 0; j < quantum; j++) {
+                        div.innerHTML += '  P' + c;
+                        duration[c]--;
+                        i++;
+                    }
+                    ++c;
+                    div.innerHTML += '  |';
+                
+                }
+                if (duration[c] < quantum) {
+                    for (j = 0; j < duration[c]; j++) {
+                        div.innerHTML += '  P' + c;
+                        i++;
+                    }
+                    ++c;
+                    div.innerHTML += '  |';                   
+                }
+            }
+        }
+        
+
+    </script>
+    <div class="container">
+    <div id="tableDiv">
+        <div id="quantum"></div>
+        <table>
+            <tr>
+                <td>№</td>
+                <td>Priority</td>
+                <td>Duration</td>
+            </tr>
+        </table>
+    </div>
+    <br><input type="button" value="show the process table" class="dws" onclick="ShowProcessTable()">
+    <br><input type="button" value="show the planning" class="dws" onclick="Show()">
+    <div id="Div" > PLANING</b><br>
+
+    </div>    
+    </div>
+
+</body>
+</html>
