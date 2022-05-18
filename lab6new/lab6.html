@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="lab6.css">
+</head>
+<body>
+    <script type="text/javascript">
+        "use strict";
+        let quantum = parseInt(prompt("Enter a time quantum: "));
+        let N = prompt("Enter the number of processes: ");
+        let number=[], priority = [], duration = [], appearance=[], outm = [];
+        let i,j,k,d,temp,burntime, min,c = 1;
+
+        for ( i = 0; i < N; i++) {
+            number.push(i);
+            priority.push(prompt("Enter priority of process: "));
+            duration.push(prompt("Enter duration of process: "));
+            appearance.push(prompt("Enter appearance of process: "));
+        }
+      
+        for ( j = priority.length - 1; j > 0; j--) {
+            for ( i = 0; i < j; i++) {
+                if (priority[i] > priority[i + 1]) {
+                    temp = number[i];
+                    number[i] = number[i + 1];
+                    number[i + 1] = temp;
+
+                    temp = priority[i];
+                    priority[i] = priority[i + 1];
+                    priority[i + 1] = temp;
+
+                    temp = duration[i];
+                    duration[i] = duration[i + 1];
+                    duration[i + 1] = temp;
+
+                    temp = appearance[i];
+                    appearance[i] = appearance[i + 1];
+                    appearance[i + 1] = temp;
+                }
+            }
+        }
+
+        function ShowProcessTable() {
+            let table = document.createElement('table');
+            let thead = document.createElement('thead');
+            let tbody = document.createElement('tbody');
+            let trh = document.createElement('tr');
+
+            for ( j = 0; j < 4; j++) {
+                let th = document.createElement('th');
+                    switch(j) {
+                        case 0:th.innerHTML = 'number';break;
+                        case 1:th.innerHTML = 'priority';break;
+                        case 2:th.innerHTML = 'duration';break;
+                        case 3:th.innerHTML = 'appearance';break;
+                    }
+                    trh.appendChild(th);                 
+                }
+            thead.appendChild(trh);
+            table.appendChild(thead);
+
+            for ( i = 0; i < N; i++) {
+                let tr = document.createElement('tr');
+                for ( j = 0; j < 4; j++) {
+                    let td = document.createElement('td');
+                    switch(j) {
+                        case 0:td.innerHTML = 'P' + number[i];break;
+                        case 1:td.innerHTML = priority[i];break;
+                        case 2:td.innerHTML = duration[i];break;
+                        case 3:td.innerHTML = appearance[i];break;
+                    }
+                    tr.appendChild(td);                 
+                }
+                tbody.appendChild(tr);
+                }                
+            table.appendChild(tbody);
+            document.getElementById("tableDiv").appendChild(table);
+            document.getElementById("quantum").innerHTML = 'Quantum Time:' + quantum;
+        }
+
+        for ( i=0;i<number.length;i++) {
+            outm[i] = [];
+        }
+
+        min = appearance[0];
+        for ( i = 0; i < appearance.length; i++) {
+            if (appearance[i+1] < appearance[i]) {min = appearance[i+1];}
+        }
+        burntime = parseInt(min);
+        for ( i = 0; i < duration.length; i++) {
+            burntime += parseInt(duration[i]);
+        }
+
+        function Show() {
+            for (j = 0; j < burntime; j++) {              
+                for (i = 0; i < number.length; i++) {
+                    if (appearance[i] <=j && duration[i]>0) {
+                        if (duration[i] >= quantum ) {
+                            for (k = 0; k < quantum; k++) {
+                                outm[i][j] = 'E';
+                                duration[i]--;
+                                for(d = 0; d<number.length; d++){
+                                    if (appearance[d] <=j && duration[d]>0 &&outm[d][j]!='E' ) {outm[d][j] = 'W';}
+                                }
+                                j++;
+                            }
+                        }
+                        else {
+                            for (duration[i]; duration[i]>0; duration[i]--) {
+                                outm[i][j] = 'E';
+                                for(d = 0; d<number.length; d++){
+                                    if (appearance[d] <=j && duration[d]>0 &&outm[d][j]!='E' ) {outm[d][j] = 'W';}                                    
+                                }
+                                j++;
+                            }                           
+                        }  
+                    }
+                }
+            }
+
+        for ( i=0;i<number.length;i++) {
+            for (j = 0; j < burntime; j++) {
+                if (outm[i][j]=='E' && typeof outm[i][j+1] == "undefined") {
+                    outm[i].splice(j+1,1)
+                }
+                if (outm[i][j]=='W' && typeof outm[i][j+1] == "undefined") {
+                    outm[i].splice(j+1,1)
+                }
+            }
+        }
+
+        let table = document.createElement('table');
+        let tbody = document.createElement('tbody');
+        let thead = document.createElement('thead');
+        let trh = document.createElement('tr');
+
+        for ( j = 0; j < burntime; j++) {
+            let th = document.createElement('th');
+            th.innerHTML = j;
+            trh.appendChild(th);                 
+            }
+        thead.appendChild(trh);
+        table.appendChild(thead);
+
+        for ( i = 0; i < number.length; i++) {
+            let tr = document.createElement('tr');
+            for ( j = 0; j < burntime; j++) {
+                let td = document.createElement('td');
+                if (j==0) {td.innerHTML = 'p'+number[i]}
+                else if (outm[i][j]=='E') {td.innerHTML = '<font color="blue">' + outm[i][j] + '</font>';}  
+                else if (outm[i][j]=='W') {td.innerHTML = outm[i][j];}           
+                tr.appendChild(td);                 
+            }
+            tbody.appendChild(tr);
+            }                
+        table.appendChild(tbody);
+        document.getElementById("Div").appendChild(table);
+        }       
+    </script>
+    <div class="container">
+    <div id="quantum"></div>
+    <div id="tableDiv">
+
+    </div>
+    <br><input type="button" value="show the process table" class="dws" onclick="ShowProcessTable()">
+    <br><input type="button" value="show the planning" class="dws" onclick="Show()">
+    <div id="Div" ></div>    
+    </div>
+
+</body>
+</html>

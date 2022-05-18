@@ -1,0 +1,39 @@
+.dws{
+padding: 13px 30px;
+margin: 5px 0 20px 0;
+font-size: 15px;
+color: #fff;
+background-color: #2ca8c6;
+border: none;
+border-bottom: 4px solid #6ee9fd;
+cursor: pointer;
+}
+.dws:hover{
+transition: all 0.5s;
+background: #fff;
+color: #2c536c;
+}
+.container{
+margin: 0 15% 0 15%;
+background: #f6f6f6;
+padding: 1%;
+}
+
+
+table{
+background: white;
+border: 1px solid;
+}
+td{
+padding: 5px;
+border: 1px solid;
+width: 100px;
+height: 30px;
+}
+tr{
+padding: 5px;
+border: 1px solid;
+}
+#Div{
+font-size: 25px;
+}
