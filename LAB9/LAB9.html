@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAB9</title>
+    <link rel="stylesheet" type="text/css" href="LAB9.css">
+</head>
+<body>
+    <script type="text/javascript">
+        var n = parseInt(prompt("Введите размер памяти",""));
+        
+
+    </script>
+    <div class="container">
+        <div class="lab9">
+            <div class="memcont">  
+                <div class="memory proc">
+                    <div id="full"><p class="procent" id="textP"></p></div>
+                </div>
+                <p id="leftInf">0%</p><p id="rightInf">100%</p>
+            </div>
+            <div class="bloks memory" id="blocks"></div>
+            <div class="inform">
+                <div id="volMem" class="inf"></div>
+                <div id="volFrMem" class="inf"></div>
+                <div id="maxBlock" class="inf"></div>
+            </div>
+            <div class="buttons">
+                <button id="addBlock" onclick="addBlock()">ДОБАВИТЬ</button>
+                <button id="removeBlock" onclick="removeBlock()"> УДАЛИТЬ</button>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">   
+        document.getElementById('volMem').innerHTML = 'Размер памяти : ' + n + ' бит.';
+        let arr = new Array(n);
+        let blockList = new Array(100);
+        let poss=[];
+        let possMax = new Array();
+        let numOfblocks=0;
+        const blocks = document.getElementById('blocks');
+        for (var i = 0; i < blockList.length; i++) {
+            blockList[i] = new Array(3);
+        }
+        for (var i = 0; i < arr.length; i++) {
+            arr[i]=0;
+        }
+        function chekСompl() {
+            let k=0;
+            for (var i = 0; i < arr.length; i++)
+                if (arr[i]==1) {k++;}
+            return k/n;
+        }
+        function fiendMax() {
+            let counter=0,max=0;
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i]==0) {counter++;}  
+                if (max<counter) {max=counter;}              
+                else if (arr[i]==1) {counter=0;}
+            }       
+            return max;
+        }
+        function changeInf() {
+            document.getElementById('volMem').innerHTML = 'Размер памяти : ' + n + ' бит.';
+            document.getElementById('volFrMem').innerHTML = 'Размер свободной памяти : ' + (n-n*chekСompl()) + ' бит.';
+            document.getElementById('maxBlock').innerHTML = 'Максимальный пустой блок : ' + fiendMax() + ' бит';
+            let k=chekСompl()*100;          
+            const full = document.getElementById('full');
+            if (k<34) {full.style.backgroundColor= 'green';}
+            else if (k<67) {full.style.backgroundColor= 'orange';}
+            else if (k<101) {full.style.backgroundColor= 'red';}
+            k+='%';
+            full.style.width = k;
+            document.getElementById('textP').innerHTML = k ;
+        }
+        function randInt(max) {
+            return Math.floor(Math.random() * max);
+        }
+        function addBlock() {    
+            let size = parseInt(prompt("Введите размер блока",""));
+            poss.splice(0,poss.length);
+            let counter=0;
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i]==0) {counter++;}
+                if (counter>=size) {
+                    let sizeBlock=i-size;
+                    poss.push(sizeBlock);
+                }
+                if (arr[i]==1) {counter=0;}
+            }
+            if (poss.length!=0) {
+                let p = poss[randInt(poss.length)];
+                let wid = size/n*100;
+                wid+='%';
+                let left = p/n*100;
+                left+='%';
+                for (var i = p ; i < p+size; i++) {
+                    arr[i]=1;
+                }
+                let div = document.createElement('div');
+                div.id ='P'+numOfblocks;
+                div.className = 'block';
+                div.innerHTML +='P'+numOfblocks;
+                div.style.width= wid;
+                div.style.marginLeft = left;
+                blocks.appendChild(div);
+                blockList[numOfblocks][0]='P'+numOfblocks;
+                blockList[numOfblocks][1]=size;
+                blockList[numOfblocks][2]=p;
+                numOfblocks++;
+                changeInf();
+            }
+            else{alert('Недостаточно памяти!');}
+        }
+        function removeBlock() {
+            let num = parseInt(prompt("Введите номер процесса (если p1 введите 1)",""));          
+            let size = blockList[num][1];
+            let p = blockList[num][2];
+            let idProc = 'P' + num;
+            for (var i = p ; i < p+size; i++) {
+                arr[i]=0;
+            }
+            document.getElementById(idProc).remove();
+            blockList[num][0]=0;
+            blockList[num][1]=0;
+            blockList[num][2]=0;
+            changeInf();
+        }
+        changeInf();
+    </script>
+</body>
+</html>
