@@ -1,0 +1,109 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+div.container {
+    width: 100%;
+    height:auto;
+    background-color: black;
+    position: relative;
+
+} 
+div.lab10{
+    position: absolute;
+    left: 50%;
+    width: 1000px;
+    margin-left: -500px;
+    margin-top: 50px;
+    background-color: pink;
+    height: 1500px;
+}
+#inform {
+    position: absolute;
+    left: 50%;
+    width: 900px;
+    margin-left: -450px;
+    background-color: white;
+    height: 130px;
+    margin-top: 25px;
+    padding: 8px 0px 0px 30px;
+}
+p {
+    font-size: 20px;
+}
+.buttons {
+    position: absolute;
+    left: 50%;
+    width: 900px;
+    margin-left: -450px;
+    background-color: white;
+    height: 70px;
+    margin-top: 220px;
+    padding: 10px;  
+}
+.buttons button {
+    position: absolute;
+    left: 50%;
+    width: 100px;
+    height: 50px;
+    background-color: #1197cc;
+    box-shadow: #094c66 4px 4px 0px;
+    border-radius: 8px;
+    transition: transform 200ms, box-shadow 200ms;
+}
+button:active {
+    transform: translateY(4px) translateX(4px);
+    box-shadow: #094c66 0px 0px 0px;
+}
+#removePage {
+    margin-left: 10px;
+}
+#addPage {
+    margin-left: -110px;
+}
+#pages {
+    position: absolute;
+    left: 50%;
+    width: 900px;
+    margin-left: -450px;
+    background-color: white;
+    height: auto;
+    margin-top: 385px;
+    padding: 25px;    
+}
+.buttonsx {
+    position: absolute;
+    left: 50%;
+    width: 900px;
+    margin-left: -450px;
+    background-color: white;
+    height: 70px;
+    margin-top: 300px;
+    padding: 10px;  
+}
+.buttonsx button {
+    position: absolute;
+    left: 50%;
+    width: 200px;
+    height: 50px;
+    margin-left: -100px;
+    background-color: #1197cc;
+    box-shadow: #094c66 4px 4px 0px;
+    border-radius: 8px;
+    transition: transform 200ms, box-shadow 200ms;
+}
+table{
+background: white;
+border: 1px solid;
+}
+td{
+padding: 5px;
+border: 1px solid;
+width: 100px;
+height: 30px;
+}
+tr{
+padding: 5px;
+border: 1px solid;
+}

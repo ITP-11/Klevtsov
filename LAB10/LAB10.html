@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAB10</title>
+    <link rel="stylesheet" type="text/css" href="LAB10.css">
+</head>
+<body>
+    <script type="text/javascript">
+    	var sizeRam = parseInt(prompt("Введите размер памяти",""));
+    	var numOfPages = parseInt(prompt("Введите число страниц",""));
+    	var numPageInProc = parseInt(prompt("Введите число страниц в процессоре",""));
+    	// var sizeRam = 256;
+    	// var numOfPages = 16;
+    	// var numPageInProc =  4;	
+    </script>
+
+
+    <div class="container">
+        <div class="lab10">
+        	<div id="inform"></div>
+        </div>
+        <div class="buttons">
+                <button id="addPage" onclick="addPage()">ДОБАВИТЬ</button>
+                <button id="removePage" onclick="removePage()"> УДАЛИТЬ</button>       	
+        </div>
+        <div class="buttonsx">
+                <button id="coll" onclick="coll()">ОБРАТИТЬСЯ</button>
+     	
+        </div>
+        <div id="pages">
+        	
+        </div>
+    </div>
+
+
+    <script type="text/javascript">   
+    	const inform = document.getElementById("inform");
+    	const pages = document.getElementById("pages");
+    	const nbsp = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+    	const nn = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|';
+    	const nN = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|';
+    	const nA = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|';
+    	const nO = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+    	let memory = sizeRam;
+    	let ram = 0,pag=0;
+    	let pageList = new Array(numOfPages);
+
+    	for (var i = 0; i < pageList.length; i++) {
+    		pageList[i]= new Array(3);
+    		for (var j = 0; j < pageList[i].length; j++) {
+    			switch(j) {
+    				case 0:pageList[i][j]='px';break;
+    				case 1:pageList[i][j]='-';break;
+    				case 2:pageList[i][j]=0;break;
+    			}
+    		}
+    	}
+
+        function randInt(max) {
+            return Math.floor(Math.random() * max);
+        }
+
+ 		function freeRamCheck() {
+ 			let counter=0;
+ 			for (var i = 0; i < pageList.length; i++) {
+ 				if (pageList[i][0]=='px') {counter++;}
+ 			}
+ 			return counter;
+ 		}
+
+    	function reInfo() {
+    		if (pag<=numOfPages) {inform.innerHTML  = '<p> Общее кол-во памяти: ' + sizeRam + '.</p>';}
+    		else if (pag>numOfPages){inform.innerHTML  = '<p> Общее кол-во памяти: ' + sizeRam + ' + ' + (pag-numOfPages)*(sizeRam/numOfPages) +'.</p>';}
+	    	inform.innerHTML += '<p> Количество страниц: ' + numOfPages + '.</p>';
+	    	inform.innerHTML += '<p> Количество страниц в оперативной памяти: ' + ram + '/' + numPageInProc + '.</p>';
+	    	let x = Math.round((freeRamCheck()*(sizeRam/numOfPages)/sizeRam)*100);
+	    	inform.innerHTML += '<p> Число свободных старниц: ' + freeRamCheck() + ' / '+ x  + '%.</p>';  
+	    	inform.innerHTML += '<p>  Размер страницы: ' + sizeRam/numOfPages + '.</p>';     		
+    	}
+    	function rePages() {
+    		pages.innerHTML ='';
+            let table = document.createElement('table');
+            let thead = document.createElement('thead');
+            let tbody = document.createElement('tbody');
+            let trh = document.createElement('tr');
+
+            for ( j = 0; j < 4; j++) {
+                let th = document.createElement('th');
+                    switch(j) {
+                        case 0:th.innerHTML = '№';break;
+                        case 1:th.innerHTML = 'Имя';break;
+                        case 2:th.innerHTML = 'В памяти?';break;
+                        case 3:th.innerHTML = 'Кол-во обращений';break;
+                    }
+                    trh.appendChild(th);                 
+                }
+            thead.appendChild(trh);
+            table.appendChild(thead);
+            let x;
+    		if (pag<=numOfPages){x=numOfPages}
+    		else {x=pag;}
+            for ( i = 0; i < x; i++) {
+                let tr = document.createElement('tr');
+                for ( j = 0; j < 4; j++) {
+                    let td = document.createElement('td');
+                    switch(j) {
+                        case 0:td.innerHTML = i;break;
+                        case 1:if (pageList[i][0]=='px') {td.innerHTML = '';} else {td.innerHTML = pageList[i][0];};break;
+                        case 2:if (pageList[i][0]=='px') {td.innerHTML = '';} else {td.innerHTML = pageList[i][1];};break;
+                        case 3:if (pageList[i][0]=='px') {td.innerHTML = '';} else {td.innerHTML = pageList[i][2];};break;
+                    }
+                    tr.appendChild(td);                 
+                }
+                tbody.appendChild(tr);
+            }                
+            table.appendChild(tbody);
+            document.getElementById("pages").appendChild(table);    		
+    	}
+
+    	function addPage() {	    		    	
+		    let name = prompt("Введите имя страницы, напримре p0","");
+		    if (pag>=numOfPages) {pageList.push(new Array(3))}	
+		    pageList[pag][0]=name;
+		    if (ram<numPageInProc) {pageList[pag][1]='+';ram++;}
+		    else {pageList[findMinColl()][1]='-'}
+		    pageList[pag][1]='+';
+		    pageList[pag][2]=randInt(9);		    
+		    pag++;   
+	    	reInfo();
+	    	rePages()
+    	}
+
+    	function removePage() {
+    		let num = parseInt(prompt("Введите номер страницы, напримре 1",""));
+    		if (pageList[num][0]=='px') {alert('Нет такой страницы');}
+    		else {
+    			if (pageList[num][1]=='+') {ram--;}
+    			if (pag<=numOfPages) {		
+			    	for (var j = 0; j < pageList[num].length; j++) {
+			    		switch(j) {
+			    			case 0:pageList[num][j]='px';break;
+			    			case 1:pageList[num][j]='-';break;
+			    			case 2:pageList[num][j]=0;break;
+			    		}   			
+			    	}
+    			}
+    			if(pag>numOfPages) {
+    				pageList.splice(num,1);
+					pag--;
+    			}	    		
+		    	
+		    	reRam();
+		    	reInfo();
+		    	rePages();
+    		}
+    	}
+
+    	function reRam() {
+    		for (var i = 0; i < pageList.length; i++) {
+    			if (ram<numPageInProc && pageList[i][0]!='px'  && pageList[i][1]=='-') {
+    				pageList[i][1]='+'; 
+    				ram++
+    			}
+    		}
+	    	reInfo();
+	    	rePages();
+    	}
+    	function coll() {
+    		let o=randInt(9);
+    		if(o==0){o=1;}
+    		for (var i = 0; i < o; i++) {
+    			setTimeout(() => { 
+    				let s=0;
+    				for (var i = 0; i < pageList.length; i++) {
+    					if (pageList[i][0]!='px') {s++;}
+    				}
+    				let k=randInt(s);
+	    			if (pageList[k][0]!='px') {
+	    				pageList[k][2] += 1;
+	    			}    				
+    			},1000);
+
+    		}
+	    	reInfo();
+	    	rePages();
+    	}
+
+    	function findMinColl() {	
+    		let k=0,g;
+    		for (var i = 0; i < pageList.length; i++) {
+    			if(pageList[i][1]=='+') {g=i; break;}
+    		}
+    		let min = pageList[g][2];
+    		for (var i = g; i < pageList.length; i++) {
+    			if (pageList[i][1]=='+' && pageList[i][2]<=min) {min=pageList[i][2];}
+    		}
+    		for (var i = 0; i < pageList.length; i++) {
+    			if (pageList[i][1]=='+' && pageList[i][2]==min) {k=i;}
+    		}
+    		return k;
+    	}
+    	reInfo();
+    	rePages()
+
+    </script>
+</body>
+</html>
